@@ -198,34 +198,34 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
             </div>
           </section>
         ))}
+      </section>
 
-        <section className="flex flex-col gap-6">
-          <h2 className="p-24-semibold text-dark-100">Popular Trips</h2>
+      <section className="flex flex-col gap-6">
+        <h2 className="p-24-semibold text-dark-100">Popular Trips</h2>
 
-          <div className="trip-grid">
-            {allTrips.map(
-              ({
-                id,
-                name,
-                imageUrls,
-                itinerary,
-                interests,
-                travelStyle,
-                estimatedPrice,
-              }) => (
-                <TripCard
-                  id={id}
-                  key={id}
-                  name={name}
-                  location={itinerary?.[0].location ?? ""}
-                  imageUrl={imageUrls[0]}
-                  tags={[interests, travelStyle]}
-                  price={estimatedPrice}
-                />
-              )
-            )}
-          </div>
-        </section>
+        <div className="trip-grid">
+          {allTrips.map(
+            ({
+              id,
+              name,
+              imageUrls,
+              itinerary,
+              interests,
+              travelStyle,
+              estimatedPrice,
+            }) => (
+              <TripCard
+                id={id}
+                key={id}
+                name={name}
+                location={itinerary?.[0].location ?? ""}
+                imageUrl={imageUrls[0]}
+                tags={[interests, travelStyle]}
+                price={estimatedPrice}
+              />
+            )
+          )}
+        </div>
       </section>
     </main>
   );
