@@ -103,6 +103,11 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
         }),
       });
 
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(errText);
+      }
+
       const result: CreateTripResponse = await response.json();
 
       if (result?.id) navigate(`/trips/${result.id}`);

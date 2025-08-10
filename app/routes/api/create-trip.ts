@@ -2,7 +2,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ID } from "appwrite";
 import { data, type ActionFunctionArgs } from "react-router";
 import { appwriteConfig, database } from "~/appwrite/client";
-import { parseMarkdownToJson } from "~/lib/utils";
+import { createProduct } from "~/lib/stripe";
+import { parseMarkdownToJson, parseTripData } from "~/lib/utils";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const {
@@ -27,7 +28,7 @@ GroupType: '${groupType}'
 
 Write each activity in a professional travel agency itinerary style — clear, polished, and enticing, like what clients receive from a premium tour operator.  
 For each day:
-- Include at least 4–6 well-planned activities.
+- Include at least 4~6 well-planned activities.
 - Each activity must state: what visitors will see/do, what makes it special, how long they should plan to spend there, and the best way to get there from the previous stop (with estimated travel time).
 - Use vivid but concise language, describing key highlights and atmosphere.
 - Keep the Night activity as the final entry for each day, and also include in its description a recommendation for a nearby place to stay (hotel name or type) close to the last activity.
@@ -122,6 +123,26 @@ Return the itinerary and lowest estimated price in a clean, non-markdown JSON fo
         userId,
       }
     );
+
+    const tripDetail = parseTripData(result.tripDetail) as Trip;
+    const tripPrice = parseInt(tripDetail.estimatedPrice.replace("$", ""), 10);
+    const paymentLink = await createProduct(
+      tripDetail.name,
+      tripDetail.description,
+      imageUrls,
+      tripPrice,
+      result.$id
+    );
+
+    await database.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.tripCollectionId,
+      result.$id,
+      {
+        payment_link: paymentLink.url,
+      }
+    );
+
     return data({ id: result.$id });
   } catch (e) {
     console.error("Error generating travel plan: ", e);

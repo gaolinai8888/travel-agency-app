@@ -2,7 +2,7 @@ import { Link, type LoaderFunctionArgs } from "react-router";
 import { getAllTrips, getTripById } from "~/appwrite/trips";
 import type { Route } from "./+types/travel-detail";
 import { cn, getFirstWord, parseTripData } from "~/lib/utils";
-import { Header, InfoPill, TripCard } from "../../../components";
+import { InfoPill, TripCard } from "../../../components";
 import {
   ButtonComponent,
   ChipDirective,
@@ -48,7 +48,7 @@ const TravelDetail = ({ loaderData }: Route.ComponentProps) => {
     weatherInfo,
     country,
   } = tripData || {};
-  const allTrips = loaderData.allTrips as Trip[] | [];
+  const allTrips = loaderData?.allTrips as Trip[] | [];
 
   const pillItems = [
     { text: travelStyle, bg: "!bg-pink-50 !text-pink-500" },
