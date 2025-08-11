@@ -66,8 +66,8 @@ const TripCard = ({
             onClick={handleDelete}
             disabled={loading}
             className={`absolute top-2 left-2 z-10 rounded-full ${
-              loading ? "bg-gray-300" : "bg-red-100"
-            } text-white w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-700 cursor-pointer`}
+              loading ? "bg-gray-300" : "bg-white"
+            } text-black w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-700 cursor-pointer`}
             aria-label="Remove trip"
             title="Remove trip"
             type="button"

@@ -1,13 +1,15 @@
-import type { LoaderFunctionArgs } from "react-router";
+import { useNavigate, type LoaderFunctionArgs } from "react-router";
 import { getAllTrips, getTripById } from "~/appwrite/trips";
 import type { Route } from "./+types/trip-detail";
 import { cn, getFirstWord, parseTripData } from "~/lib/utils";
 import { Header, InfoPill, TripCard } from "components";
 import {
+  ButtonComponent,
   ChipDirective,
   ChipListComponent,
   ChipsDirective,
 } from "@syncfusion/ej2-react-buttons";
+import { useState } from "react";
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { tripId } = params;
@@ -30,6 +32,9 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 };
 
 const TripDetail = ({ loaderData }: Route.ComponentProps) => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   const imageUrls = loaderData?.trip?.imageUrls || [];
   const tripData = parseTripData(loaderData?.trip?.tripDetail);
   const {
@@ -196,6 +201,23 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
             </div>
           </section>
         ))}
+
+        <ButtonComponent
+          type="submit"
+          className="button-class !h-12 !w-full"
+          disabled={loading}
+          onClick={() => {
+            navigate("/trips/create", { state: { trip: loaderData.trip } });
+          }}
+        >
+          <img
+            src={`/assets/icons/${loading ? "loader.svg" : "magic-star.svg"}`}
+            className={cn("size-5", { "animate-spin": loading })}
+          />
+          <span className="p-16-semibold text-white">
+            {loading ? "Updating" : "Update Trip"}
+          </span>
+        </ButtonComponent>
       </section>
 
       <section className="flex flex-col gap-6">

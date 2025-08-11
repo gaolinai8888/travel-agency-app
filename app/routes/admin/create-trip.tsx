@@ -2,17 +2,17 @@ import { ComboBoxComponent } from "@syncfusion/ej2-react-dropdowns";
 import { Header } from "components";
 import type { Route } from "./+types/create-trip";
 import { comboBoxItems, selectItems } from "~/constants";
-import { cn, formatKey } from "~/lib/utils";
+import { cn, formatKey, parseTripData } from "~/lib/utils";
 import {
   LayerDirective,
   LayersDirective,
   MapsComponent,
 } from "@syncfusion/ej2-react-maps";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { world_map } from "~/constants/world_map";
 import { ButtonComponent } from "@syncfusion/ej2-react-buttons";
 import { account } from "~/appwrite/client";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 // get all countries
 export const loader = async () => {
@@ -30,17 +30,24 @@ export const loader = async () => {
 };
 
 const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
-  const countries = loaderData as (Country & { flagUrl: string })[];
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const countries = loaderData as (Country & { flagUrl: string })[];
+
+  const existingTrip = location.state?.trip || null;
+
+  const existingTripData = parseTripData(existingTrip?.tripDetail);
 
   const [formData, setFormData] = useState<TripFormData>({
-    country: countries[0]?.name || "",
-    travelStyle: "",
-    interest: "",
-    budget: "",
-    duration: 0,
-    groupType: "",
+    country: existingTripData?.country || countries[0]?.name || "",
+    travelStyle: existingTripData?.travelStyle || "",
+    interest: existingTripData?.interests || "",
+    budget: existingTripData?.budget || "",
+    duration: existingTripData?.duration || 0,
+    groupType: existingTripData?.groupType || "",
   });
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -59,9 +66,12 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
           ?.coordinates || [],
     },
   ];
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+
+    const apiUrl = existingTrip ? "/api/update-trip" : "/api/create-trip";
 
     if (
       !formData.country ||
@@ -89,18 +99,32 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
     }
 
     try {
-      const response = await fetch("/api/create-trip", {
+      console.log(existingTrip.$id);
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          country: formData.country,
-          numberOfDays: formData.duration,
-          travelStyle: formData.travelStyle,
-          interests: formData.interest,
-          budget: formData.budget,
-          groupType: formData.groupType,
-          userId: user.$id,
-        }),
+        body: JSON.stringify(
+          existingTrip
+            ? {
+                tripId: existingTrip.$id,
+                country: formData.country,
+                numberOfDays: formData.duration,
+                travelStyle: formData.travelStyle,
+                interests: formData.interest,
+                budget: formData.budget,
+                groupType: formData.groupType,
+                userId: user.$id,
+              }
+            : {
+                country: formData.country,
+                numberOfDays: formData.duration,
+                travelStyle: formData.travelStyle,
+                interests: formData.interest,
+                budget: formData.budget,
+                groupType: formData.groupType,
+                userId: user.$id,
+              }
+        ),
       });
 
       if (!response.ok) {
@@ -126,7 +150,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
   return (
     <main className="flex flex-col gap-10 pb-20 wrapper">
       <Header
-        title="Add a New Trip"
+        title={existingTrip ? "Edit Trip" : "Add a New Trip"}
         description="View and edit AI Generated travel plans"
       />
 
@@ -140,6 +164,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
               fields={{ text: "text", value: "value" }}
               placeholder="Select a Country"
               className="combo-box"
+              value={formData.country}
               itemTemplate={(data: any) => (
                 <span
                   style={{
@@ -198,6 +223,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
               name="duration"
               placeholder="Enter a number of days"
               className="form-input placeholder:text-gray-100"
+              value={formData.duration}
               onChange={(e) => handleChange("duration", Number(e.target.value))}
             />
           </div>
@@ -214,6 +240,7 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
                 }))}
                 fields={{ text: "text", value: "value" }}
                 placeholder={`Select ${formatKey(key)}`}
+                value={formData[key] as string}
                 change={(e: { value: string | undefined }) => {
                   if (e.value) {
                     handleChange(key, e.value);
@@ -272,7 +299,13 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
                 className={cn("size-5", { "animate-spin": loading })}
               />
               <span className="p-16-semibold text-white">
-                {loading ? "Generating..." : "Generate Trip"}
+                {loading
+                  ? existingTrip
+                    ? "Updating..."
+                    : "Generating..."
+                  : existingTrip
+                  ? "Update Trip"
+                  : "Generate Trip"}
               </span>
             </ButtonComponent>
           </footer>
