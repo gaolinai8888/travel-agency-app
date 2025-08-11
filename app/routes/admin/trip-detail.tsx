@@ -61,8 +61,6 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
 
   const allTrips = loaderData.allTrips as Trip[] | [];
 
-  console.log(loaderData);
-
   return (
     <main className="travel-detail wrapper">
       <Header
@@ -222,6 +220,7 @@ const TripDetail = ({ loaderData }: Route.ComponentProps) => {
                 imageUrl={imageUrls[0]}
                 tags={[interests, travelStyle]}
                 price={estimatedPrice}
+                hasRemoveButton={true}
               />
             )
           )}

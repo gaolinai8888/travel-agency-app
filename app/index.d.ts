@@ -81,6 +81,7 @@ declare interface TripCardProps {
   imageUrl: string;
   tags: string[];
   price: string;
+  hasRemoveButton: boolean;
 }
 
 declare interface StatsCard {

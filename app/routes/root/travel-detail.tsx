@@ -223,6 +223,7 @@ const TravelDetail = ({ loaderData }: Route.ComponentProps) => {
               location={trip.itinerary?.[0]?.location ?? ""}
               tags={[trip.interests, trip.travelStyle]}
               price={trip.estimatedPrice}
+              hasRemoveButton={false}
             />
           ))}
         </div>

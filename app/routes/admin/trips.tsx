@@ -70,6 +70,7 @@ const Trips = ({ loaderData }: Route.ComponentProps) => {
                 imageUrl={imageUrls[0]}
                 tags={[interests, travelStyle]}
                 price={estimatedPrice}
+                hasRemoveButton={true}
               />
             )
           )}
