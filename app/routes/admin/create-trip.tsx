@@ -8,7 +8,7 @@ import {
   LayersDirective,
   MapsComponent,
 } from "@syncfusion/ej2-react-maps";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { world_map } from "~/constants/world_map";
 import { ButtonComponent } from "@syncfusion/ej2-react-buttons";
 import { account } from "~/appwrite/client";
@@ -37,10 +37,10 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
 
   const existingTrip = location.state?.trip || null;
 
-  const existingTripData = parseTripData(existingTrip?.tripDetail);
+  const existingTripData = parseTripData(existingTrip?.tripDetail || "");
 
   const [formData, setFormData] = useState<TripFormData>({
-    country: existingTripData?.country || countries[0]?.name || "",
+    country: existingTripData?.country || "",
     travelStyle: existingTripData?.travelStyle || "",
     interest: existingTripData?.interests || "",
     budget: existingTripData?.budget || "",
@@ -99,7 +99,6 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
     }
 
     try {
-      console.log(existingTrip.$id);
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
