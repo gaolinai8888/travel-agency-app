@@ -40,11 +40,26 @@ const RootNavbar = () => {
         </Link>
 
         <aside>
+          {
+            <Link
+              to="/saved-trips"
+              className={cn("text-base font-normal text-white", {
+                "text-dark-100":
+                  location.pathname.startsWith("/travel") ||
+                  location.pathname.endsWith("/saved-trips"),
+              })}
+            >
+              Saved Trips
+            </Link>
+          }
+
           {user.status === "admin" && (
             <Link
               to="/dashboard"
               className={cn("text-base font-normal text-white", {
-                "text-dark-100": location.pathname.startsWith("/travel"),
+                "text-dark-100":
+                  location.pathname.startsWith("/travel") ||
+                  location.pathname.endsWith("/saved-trips"),
               })}
             >
               Admin Panel

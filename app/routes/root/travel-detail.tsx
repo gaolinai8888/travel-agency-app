@@ -224,6 +224,7 @@ const TravelDetail = ({ loaderData }: Route.ComponentProps) => {
               tags={[trip.interests, trip.travelStyle]}
               price={trip.estimatedPrice}
               hasRemoveButton={false}
+              hasBookmarkButton={true}
             />
           ))}
         </div>

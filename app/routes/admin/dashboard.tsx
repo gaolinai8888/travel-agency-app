@@ -135,6 +135,7 @@ const Dashboard = ({ loaderData }: Route.ComponentProps) => {
               tags={[trip.interests!, trip.travelStyle!]}
               price={trip.estimatedPrice!}
               hasRemoveButton={true}
+              hasBookmarkButton={false}
             />
           ))}
         </div>

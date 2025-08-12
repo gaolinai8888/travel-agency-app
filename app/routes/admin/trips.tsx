@@ -71,6 +71,7 @@ const Trips = ({ loaderData }: Route.ComponentProps) => {
                 tags={[interests, travelStyle]}
                 price={estimatedPrice}
                 hasRemoveButton={true}
+                hasBookmarkButton={false}
               />
             )
           )}
