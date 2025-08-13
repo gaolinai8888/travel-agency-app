@@ -34,12 +34,12 @@ export const removeBookmark = async (bookmarkId: string) => {
 
 export const getBookmarksByUserId = async (userId: string) => {
   try {
-    const booksmarks = await database.listDocuments(
+    const bookmarks = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.bookmarkCollectionId,
       [Query.equal("userId", userId)]
     );
-    return booksmarks;
+    return bookmarks;
     // redirect to saved trips page
   } catch (e) {
     console.log("Error getting bookmarks for the user", e);

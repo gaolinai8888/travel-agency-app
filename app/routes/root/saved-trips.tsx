@@ -1,8 +1,10 @@
-import { redirect } from "react-router";
+import { redirect, useSearchParams } from "react-router";
 import { account, appwriteConfig, database } from "~/appwrite/client";
 import { getBookmarksByUserId } from "~/appwrite/bookmarks";
-import { TripCard } from "components";
+import { Header, TripCard } from "components";
 import { parseTripData } from "~/lib/utils";
+import { PagerComponent } from "@syncfusion/ej2-react-grids";
+import { useState } from "react";
 
 export const clientLoader = async () => {
   try {
@@ -49,10 +51,23 @@ const SavedTrips = ({ loaderData }: { loaderData: { trips: any[] } }) => {
     imageUrls: imageUrls ?? [],
   }));
 
+  const [searchParams] = useSearchParams();
+  const initialPage = Number(searchParams.get("page") || "1");
+
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.location.search = `?page=${page}`;
+  };
+
   return (
     <main className="travel-detail pt-40 wrapper">
       <section className="flex flex-col gap-6">
-        <h2 className="p-24-semibold text-dark-100">Saved Trips</h2>
+        <Header
+          title="Saved Trips"
+          description="Your favorite journeys, all in one place."
+        />
 
         {trips.length === 0 ? (
           <p>No saved trips found.</p>
@@ -74,6 +89,14 @@ const SavedTrips = ({ loaderData }: { loaderData: { trips: any[] } }) => {
           </div>
         )}
       </section>
+
+      <PagerComponent
+        totalRecordsCount={trips.length}
+        pageSize={8}
+        currentPage={currentPage}
+        click={(args) => handlePageChange(args.currentPage)}
+        cssClass="!mb-4"
+      />
     </main>
   );
 };

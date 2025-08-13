@@ -12,6 +12,7 @@ import {
   getBookmarksByUserId,
   removeBookmark,
 } from "~/appwrite/bookmarks";
+import { ID, Query } from "appwrite";
 
 const TripCard = ({
   id,
@@ -29,9 +30,11 @@ const TripCard = ({
   // for deleting
   const [loading, setLoading] = useState(false);
   // for bookmarking
-  const [isSavingTrip, setIsSavingTrip] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkId, setBookmarkId] = useState<string | null>(null);
+  // for likes
+  const [likes, setLikes] = useState(0);
+  const [hasLiked, setHasLiked] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -57,8 +60,17 @@ const TripCard = ({
   };
 
   useEffect(() => {
-    async function fetchBookmark() {
+    async function fetchTripData() {
       try {
+        // Fetch trip likes count
+        const trip = await database.getDocument(
+          appwriteConfig.databaseId,
+          appwriteConfig.tripCollectionId,
+          id
+        );
+        setLikes(trip.likes || 0);
+
+        // Fetch bookmarks
         const user = await account.get();
         const bookmarks = await getBookmarksByUserId(user.$id);
         const bookmark = bookmarks?.documents.find((b) => b.tripId === id);
@@ -66,20 +78,32 @@ const TripCard = ({
           setIsBookmarked(true);
           setBookmarkId(bookmark.$id);
         }
-      } catch {
+
+        // Check if this user already liked the trip
+        const userLike = await database.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.likeCollectionId,
+          [Query.equal("tripId", id), Query.equal("userId", user.$id)]
+        );
+
+        if (userLike.documents.length > 0) {
+          setHasLiked(true);
+        }
+      } catch (err) {
         // User not logged in or no bookmark
         setIsBookmarked(false);
         setBookmarkId(null);
+
+        console.error("Error fetching trip data", err);
       }
     }
-    fetchBookmark();
+    fetchTripData();
   }, [id]);
 
   const handleBookmark = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    setIsSavingTrip(true);
     setError(null);
     try {
       const user = await account.get();
@@ -98,27 +122,75 @@ const TripCard = ({
       }
     } catch (err: any) {
       setError(err.message || "Error updating bookmark");
-    } finally {
-      setIsSavingTrip(false);
     }
   };
+
+  const handleLike = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    try {
+      const user = await account.get();
+
+      if (hasLiked) {
+        // Unlike → remove user like document
+        const userLike = await database.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.likeCollectionId,
+          [Query.equal("tripId", id), Query.equal("userId", user.$id)]
+        );
+
+        if (userLike.documents.length > 0) {
+          await database.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.likeCollectionId,
+            userLike.documents[0].$id
+          );
+        }
+
+        await database.updateDocument(
+          appwriteConfig.databaseId,
+          appwriteConfig.tripCollectionId,
+          id,
+          { likes: likes - 1 }
+        );
+
+        setLikes((prev) => prev - 1);
+        setHasLiked(false);
+      } else {
+        // Like → add user like document
+        await database.createDocument(
+          appwriteConfig.databaseId,
+          appwriteConfig.likeCollectionId,
+          ID.unique(),
+          { tripId: id, userId: user.$id }
+        );
+
+        await database.updateDocument(
+          appwriteConfig.databaseId,
+          appwriteConfig.tripCollectionId,
+          id,
+          { likes: likes + 1 }
+        );
+
+        setLikes((prev) => prev + 1);
+        setHasLiked(true);
+      }
+    } catch (err) {
+      console.error("Error updating like", err);
+    }
+  };
+
   return (
     <>
       {/* Full page overlay and spinner during loading */}
-      {(loading || isSavingTrip) && (
+      {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-50 pointer-events-auto">
           <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
-      <Link
-        to={
-          path.pathname === "/" || path.pathname.startsWith("/travel")
-            ? `/travel/${id}`
-            : `/trips/${id}`
-        }
-        className={cn("trip-card", loading && "pointer-events-none")}
-      >
+      <div className={cn("trip-card", loading && "pointer-events-none")}>
         {hasRemoveButton && (
           <button
             onClick={handleDelete}
@@ -136,14 +208,12 @@ const TripCard = ({
 
         {hasBookmarkButton && (
           <button
-            onClick={handleBookmark}
-            disabled={isSavingTrip}
-            className={`absolute top-6 left-4 z-10 rounded-full ${
-              isSavingTrip ? "bg-gray-300" : "bg-transparent"
+            className={`absolute top-6 left-4 z-10 rounded-full "bg-transparent"
             } w-8 h-8 flex items-center justify-center hover:bg-red-700 cursor-pointer`}
             aria-label="Bookmark trip"
             title="Bookmark trip"
             type="button"
+            onClick={handleBookmark}
           >
             <img
               src={`/assets/icons/${
@@ -154,10 +224,19 @@ const TripCard = ({
             />
           </button>
         )}
-
         <img src={imageUrl} alt={name} />
+
         <article>
-          <h2>{name}</h2>
+          <Link
+            to={
+              path.pathname === "/" || path.pathname.startsWith("/travel")
+                ? `/travel/${id}`
+                : `/trips/${id}`
+            }
+          >
+            <h2>{name}</h2>
+          </Link>
+
           <figure>
             <img
               src="/assets/icons/location-mark.svg"
@@ -168,7 +247,7 @@ const TripCard = ({
           </figure>
         </article>
 
-        <div className="mt-5 pl-[18px] pr-3.5 pb-5">
+        <div className="mt-5 pl-[18px] pr-3.5 pb-5 flex items-center justify-between">
           <ChipListComponent id="travel-chip">
             <ChipsDirective>
               {tags.map((tag, index) => (
@@ -184,10 +263,28 @@ const TripCard = ({
               ))}
             </ChipsDirective>
           </ChipListComponent>
+          <button
+            onClick={handleLike}
+            className={`flex cursor-pointer items-center gap-1 px-3 py-0.5 rounded-full border transition-colors ${
+              hasLiked
+                ? "bg-white text-red-300 border-red-300"
+                : "bg-white text-black border-black"
+            }`}
+            aria-label="Like trip"
+          >
+            <img
+              src={`/assets/icons/${
+                hasLiked ? "heart-filled.png" : "heart.png"
+              }`}
+              alt="like"
+              className="w-4 h-4 object-contain"
+            />
+            <span className="text-sm">{likes}</span>
+          </button>
         </div>
 
         <article className="tripCard-pill">{price}</article>
-      </Link>
+      </div>
     </>
   );
 };
