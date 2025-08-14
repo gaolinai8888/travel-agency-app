@@ -1,87 +1,56 @@
-# Welcome to React Router!
+# 📌 Travel Agency App 🗺️ 
 
-A modern, production-ready template for building full-stack React applications using React Router.
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
-
-```bash
-npm run dev
-```
-
-Your application will be available at `http://localhost:5173`.
-
-## Building for Production
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+A modern, responsive web application for exploring and booking travel experiences.  
+The app includes:
+- **Public-facing website** for browsing destinations and generating trips
+- **Admin dashboard** for managing trips (create & delete)
+- **Authentication** to secure admin access
+- **Google Gemini AI** integration for dynamic trip generation
 
 ---
 
-Built with ❤️ using React Router.
+## Getting Started
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v16+ recommended)
+- npm or yarn
+- [Docker](https://www.docker.com/) (optional, for containerized deployment)
+- API keys for:
+  - Google Gemini API (trip generation)
+  - Authentication provider (e.g., Appwrite, Firebase, Auth0)
+
+---
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/gaolinai8888/travel-agency-app.git
+cd travel-agency-app
+
+# Install dependencies
+npm install
+
+# Create environment variables file
+cp .env.example .env
+# Fill in your API keys and config in .env
+
+# Start the development server
+npm run dev
+```
+### Build for Production
+```bash
+npm run build
+# The optimized production-ready files will be in the `dist/` folder
+```
+
+---
+## Tech Stack
+
+| Category           | Tools / Technologies                                  |
+| ------------------ | ----------------------------------------------------- |
+| **Frontend**       | React, React Router, TypeScript, Vite, Tailwind CSS   |
+| **AI Generation**  | Google Gemini API                                     |
+| **Authentication** | Appwrite / Firebase / Auth0 (based on implementation) |
+| **Dev Tooling**    | Vite (HMR, fast builds)                               |
+| **Deployment**     | Docker (containerization)                             |
