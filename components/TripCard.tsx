@@ -1,4 +1,4 @@
-import { Link, redirect, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { cn, getFirstWord } from "~/lib/utils";
 import {
   ChipDirective,
@@ -13,6 +13,9 @@ import {
   removeBookmark,
 } from "~/appwrite/bookmarks";
 import { ID, Query } from "appwrite";
+import { ToastComponent } from "@syncfusion/ej2-react-notifications";
+import { useRef } from "react";
+import "@syncfusion/ej2-react-notifications/styles/material.css";
 
 const TripCard = ({
   id,
@@ -51,7 +54,13 @@ const TripCard = ({
         id
       );
       navigate("/trips");
+      showToast("Removed", "The trip has been removed.", "e-toast-success");
     } catch (err: any) {
+      showToast(
+        "Error",
+        "An error has occurred while deleting the trip.",
+        "e-toast-danger"
+      );
       console.error("Failed to delete document", err);
       setError(err.message || "Error deleting record");
     } finally {
@@ -115,12 +124,27 @@ const TripCard = ({
         }
         setIsBookmarked(true);
         setBookmarkId(bookmark.$id);
+        showToast(
+          "Bookmarked",
+          "Trip added to your bookmarks.",
+          "e-toast-success"
+        );
       } else if (bookmarkId) {
         await removeBookmark(bookmarkId);
         setIsBookmarked(false);
         setBookmarkId(null);
+        showToast(
+          "Removed",
+          "Trip removed from your bookmarks.",
+          "e-toast-success"
+        );
       }
     } catch (err: any) {
+      showToast(
+        "Error",
+        "An error has occurred while bookmarking/unbookmarking the trip.",
+        "e-toast-danger"
+      );
       setError(err.message || "Error updating bookmark");
     }
   };
@@ -177,8 +201,23 @@ const TripCard = ({
         setHasLiked(true);
       }
     } catch (err) {
+      showToast(
+        "Error",
+        "An error has occurred while liking/unliking the trip.",
+        "e-toast-danger"
+      );
       console.error("Error updating like", err);
     }
+  };
+
+  const toastRef = useRef<ToastComponent>(null);
+
+  const showToast = (title: string, content: string, cssClass: string) => {
+    toastRef.current?.show({
+      title,
+      content,
+      cssClass,
+    });
   };
 
   return (
@@ -190,14 +229,16 @@ const TripCard = ({
         </div>
       )}
 
-      <div className={cn("trip-card", loading && "pointer-events-none")}>
+      <div
+        className={cn("trip-card relative", loading && "pointer-events-none")}
+      >
         {hasRemoveButton && (
           <button
             onClick={handleDelete}
             disabled={loading}
             className={`absolute top-7 left-4 z-10 rounded-full ${
               loading ? "bg-gray-300" : "bg-white"
-            } text-black w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-700 cursor-pointer`}
+            } text-black w-6 h-6 flex items-center justify-center text-xs font-bold hover:bg-red-400 cursor-pointer`}
             aria-label="Remove trip"
             title="Remove trip"
             type="button"
@@ -209,7 +250,7 @@ const TripCard = ({
         {hasBookmarkButton && (
           <button
             className={`absolute top-6 left-4 z-10 rounded-full "bg-transparent"
-            } w-8 h-8 flex items-center justify-center hover:bg-red-700 cursor-pointer`}
+            } w-8 h-8 flex items-center justify-center hover:bg-yellow-500 cursor-pointer`}
             aria-label="Bookmark trip"
             title="Bookmark trip"
             type="button"
@@ -284,6 +325,12 @@ const TripCard = ({
         </div>
 
         <article className="tripCard-pill">{price}</article>
+        <ToastComponent
+          ref={toastRef}
+          position={{ X: "Right", Y: "Bottom" }}
+          timeOut={4000}
+          showCloseButton={true}
+        />
       </div>
     </>
   );

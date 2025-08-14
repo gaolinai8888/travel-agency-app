@@ -95,7 +95,7 @@ const SavedTrips = ({ loaderData }: { loaderData: { trips: any[] } }) => {
         pageSize={8}
         currentPage={currentPage}
         click={(args) => handlePageChange(args.currentPage)}
-        cssClass="!mb-4"
+        cssClass="custom-pager !mb-4"
       />
     </main>
   );

@@ -22,12 +22,12 @@ const SignIn = () => {
           <header className="header">
             <Link to="/">
               <img
-                src="/assets/icons/logo.svg"
+                src="/assets/icons/logo.png"
                 alt="logo"
                 className="size-[30px]"
               />
             </Link>
-            <h1 className="p-28-bold text-dark-100">Tourvisto</h1>
+            <h1 className="p-28-bold text-primary-500">Horizia</h1>
           </header>
 
           <article>
@@ -43,7 +43,7 @@ const SignIn = () => {
           <ButtonComponent
             type="button"
             iconCss="e-search-icon"
-            className="button-class !h-11 !w-full"
+            className="button-class !h-11 !w-full "
             onClick={loginWithGoogle}
           >
             <img

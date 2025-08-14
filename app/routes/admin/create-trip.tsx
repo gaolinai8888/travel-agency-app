@@ -8,11 +8,12 @@ import {
   LayersDirective,
   MapsComponent,
 } from "@syncfusion/ej2-react-maps";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { world_map } from "~/constants/world_map";
 import { ButtonComponent } from "@syncfusion/ej2-react-buttons";
 import { account } from "~/appwrite/client";
 import { useLocation, useNavigate } from "react-router";
+import type { ToastComponent } from "@syncfusion/ej2-react-notifications";
 
 // get all countries
 export const loader = async () => {
@@ -133,10 +134,24 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
 
       const result: CreateTripResponse = await response.json();
 
-      if (result?.id) navigate(`/trips/${result.id}`);
-      else console.log("Failed to generate a trip");
+      if (result?.id) {
+        showToast("Success", "A new trip has been created!", "e-toast-success");
+        navigate(`/trips/${result.id}`);
+      } else {
+        console.log("Failed to generate a trip");
+        showToast(
+          "Error",
+          "An error has occurred while creating the trip.",
+          "e-toast-danger"
+        );
+      }
     } catch (e) {
       console.error("Error generating trip", e);
+      showToast(
+        "Error",
+        "An error has occurred while creating the trip.",
+        "e-toast-danger"
+      );
     } finally {
       setLoading(false);
     }
@@ -144,6 +159,16 @@ const CreateTrip = ({ loaderData }: Route.ComponentProps) => {
 
   const handleChange = (key: keyof TripFormData, value: string | number) => {
     setFormData({ ...formData, [key]: value });
+  };
+
+  const toastRef = useRef<ToastComponent>(null);
+
+  const showToast = (title: string, content: string, cssClass: string) => {
+    toastRef.current?.show({
+      title,
+      content,
+      cssClass,
+    });
   };
 
   return (

@@ -15,8 +15,8 @@ const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
   return (
     <section className="nav-items">
       <Link to="/" className="link-logo">
-        <img src="/assets/icons/logo.svg" alt="logo" className="size-[30px]" />
-        <h1>Tourvisto</h1>
+        <img src="/assets/icons/logo.png" alt="logo" className="size-[30px]" />
+        <h1 className="text-primary-500">Horizia</h1>
       </Link>
 
       <div className="container">
@@ -56,7 +56,7 @@ const NavItems = ({ handleClick }: { handleClick?: () => void }) => {
           </article>
           <button onClick={handleLogout} className="cursor-pointer">
             <img
-              src="/assets/icons/logout.svg"
+              src="/assets/icons/logout.png"
               alt="logout"
               className="size-6"
             />

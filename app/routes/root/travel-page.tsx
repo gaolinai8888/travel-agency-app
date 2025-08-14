@@ -44,7 +44,7 @@ const FeaturedDestination = ({
 
           <figure className="flex gap-2 items-center">
             <img
-              src="/assets/images/david.webp"
+              src="/assets/images/james.webp"
               alt="user"
               className={cn("size-4 rounded-full aspect-square", {
                 "size-11": bigCard,
@@ -104,11 +104,11 @@ const TravelPage = ({ loaderData }: Route.ComponentProps) => {
         <div>
           <section className="wrapper">
             <article>
-              <h1 className="p-72-bold text-dark-100">
+              <h1 className="p-72-bold text-primary-100">
                 Plan Your Trip with Ease
               </h1>
 
-              <p className="text-dark-100">
+              <p className="text-primary-500">
                 Customize your travel itinerary in minutes—pick your
                 destination, set your preferences, and explore with confidence.
               </p>
@@ -137,7 +137,7 @@ const TravelPage = ({ loaderData }: Route.ComponentProps) => {
               bgImage="bg-card-1"
               containerClass="h-1/3 lg:h-1/2"
               bigCard
-              title="Barcelona Tour"
+              title="France Tour"
               rating={4.2}
               activityCount={196}
             />
@@ -146,7 +146,7 @@ const TravelPage = ({ loaderData }: Route.ComponentProps) => {
               <FeaturedDestination
                 bgImage="bg-card-2"
                 bigCard
-                title="London"
+                title="England"
                 rating={4.5}
                 activityCount={512}
               />
@@ -221,11 +221,11 @@ const TravelPage = ({ loaderData }: Route.ComponentProps) => {
         <div className="wrapper footer-container">
           <Link to="/">
             <img
-              src="/assets/icons/logo.svg"
+              src="/assets/icons/logo.png"
               alt="logo"
               className="size-[30px]"
             />
-            <h1>Tourvisto</h1>
+            <h1 className="text-primary-500">Horizia</h1>
           </Link>
 
           <div>

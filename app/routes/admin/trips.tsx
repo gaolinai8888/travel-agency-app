@@ -82,7 +82,7 @@ const Trips = ({ loaderData }: Route.ComponentProps) => {
           pageSize={8}
           currentPage={currentPage}
           click={(args) => handlePageChange(args.currentPage)}
-          cssClass="!mb-4"
+          cssClass="custom-pager !mb-4"
         />
       </section>
     </main>

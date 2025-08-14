@@ -32,18 +32,18 @@ const RootNavbar = () => {
       <header className="root-nav wrapper">
         <Link to="/" className="link-logo">
           <img
-            src="/assets/icons/logo.svg"
+            src="/assets/icons/logo.png"
             alt="logo"
             className="size-[30px]"
           />
-          <h1>Tourvisto</h1>
+          <h1 className="text-primary-500">Horizia</h1>
         </Link>
 
         <aside>
           {
             <Link
               to="/saved-trips"
-              className={cn("text-base font-normal text-white", {
+              className={cn("text-base font-normal text-primary-100", {
                 "text-dark-100":
                   location.pathname.startsWith("/travel") ||
                   location.pathname.endsWith("/saved-trips"),
@@ -56,7 +56,7 @@ const RootNavbar = () => {
           {user.status === "admin" && (
             <Link
               to="/dashboard"
-              className={cn("text-base font-normal text-white", {
+              className={cn("text-base font-normal text-primary-100", {
                 "text-dark-100":
                   location.pathname.startsWith("/travel") ||
                   location.pathname.endsWith("/saved-trips"),
@@ -74,7 +74,7 @@ const RootNavbar = () => {
 
           <button onClick={handleLogout} className="cursor-pointer">
             <img
-              src="/assets/icons/logout.svg"
+              src="/assets/icons/logout.png"
               alt="logout"
               className="size-6 rotate-180"
             />

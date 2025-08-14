@@ -19,9 +19,9 @@
   --color-gray-200: #eaecf0;
   --color-gray-500: #667085;
   --color-gray-700: #344054;
-  --color-primary-50: #e9f3fb;
-  --color-primary-100: #256ff1;
-  --color-primary-500: #175cd3;
+  --color-primary-50: #41b4c9;
+  --color-primary-100: #237ea8;
+  --color-primary-500: #2e6b8a;
   --color-light-100: #ecf2ef;
   --color-light-200: #f9fbfc;
   --color-light-300: #f2f4f7;
@@ -38,14 +38,14 @@
   --color-red-50: #fff4ed;
   --color-red-100: #ff543d;
 
-  --background-image-auth: url("/assets/images/auth-img.webp");
-  --background-image-hero: url("/assets/images/hero-img.png");
-  --background-image-card-1: url("/assets/images/card-img-1.png");
-  --background-image-card-2: url("/assets/images/card-img-2.png");
-  --background-image-card-3: url("/assets/images/card-img-3.png");
-  --background-image-card-4: url("/assets/images/card-img-4.png");
-  --background-image-card-5: url("/assets/images/card-img-5.png");
-  --background-image-card-6: url("/assets/images/card-img-6.png");
+  --background-image-auth: url("/assets/images/auth-img.jpg");
+  --background-image-hero: url("/assets/images/hero-img.jpg");
+  --background-image-card-1: url("/assets/images/card-img-1.jpg");
+  --background-image-card-2: url("/assets/images/card-img-2.jpg");
+  --background-image-card-3: url("/assets/images/card-img-3.jpg");
+  --background-image-card-4: url("/assets/images/card-img-4.jpg");
+  --background-image-card-5: url("/assets/images/card-img-5.jpg");
+  --background-image-card-6: url("/assets/images/card-img-6.jpg");
   --background-image-linear100: linear-gradient(
     105deg,
     rgba(207, 241, 255, 0.8) 14.17%,
@@ -56,11 +56,9 @@
     rgba(3, 3, 3, 0.54) -3.66%,
     rgba(6, 6, 6, 0) 45.57%
   );
-  --shadow-100:
-    0px 1px 3px 0px rgba(16, 24, 40, 0.1),
+  --shadow-100: 0px 1px 3px 0px rgba(16, 24, 40, 0.1),
     0px 1px 2px 0px rgba(16, 24, 40, 0.06);
-  --shadow-200:
-    0px 12px 16px -4px rgba(16, 24, 40, 0.1),
+  --shadow-200: 0px 12px 16px -4px rgba(16, 24, 40, 0.1),
     0px 4px 20px -2px rgba(16, 24, 40, 0.2);
   --shadow-300: 0px 2px 30px 0px rgba(0, 0, 0, 0.05);
   --shadow-400: 0px 2px 6px 0px rgba(13, 10, 44, 0.08);
@@ -69,6 +67,26 @@
 }
 
 @layer components {
+  /* Pager container */
+  .custom-pager .e-pager {
+    @apply bg-[#41b4c9] p-2 rounded-md;
+  }
+
+  /* Active page number */
+  .custom-pager .e-currentitem {
+    @apply bg-[#237ea8] text-white rounded px-3 py-1;
+  }
+
+  /* Page numbers hover state */
+  .custom-pager .e-numericitem:hover {
+    @apply bg-[#2e6b8a] text-white rounded;
+  }
+
+  /* Pager navigation buttons (prev/next) */
+  .custom-pager .e-pagerbutton {
+    @apply text-white hover:bg-[#237ea8] rounded;
+  }
+
   .error {
     @apply text-red-500 text-base font-medium text-center;
   }
@@ -438,7 +456,7 @@
     @apply text-sm md:text-base font-semibold;
   }
   .button-class {
-    @apply !bg-primary-100 !px-4 !rounded-lg !flex !items-center !justify-center !gap-1.5 !shadow-none;
+    @apply !bg-primary-50 !px-4 !rounded-lg !flex !items-center !justify-center !gap-1.5 !shadow-none;
   }
   .button-class-secondary {
     @apply !bg-white !px-4 !rounded-lg !flex !items-center !justify-center !gap-1.5 !shadow-sm;
@@ -517,8 +535,7 @@ body {
   border-radius: 6px;
   border: 1px solid #f0fef9;
   background: #ffffff;
-  box-shadow:
-    0px 0px 3px 0px rgba(16, 24, 40, 0.1),
+  box-shadow: 0px 0px 3px 0px rgba(16, 24, 40, 0.1),
     0px 0px 2px 0px rgba(16, 24, 40, 0.06);
   height: 40px;
 }
@@ -527,8 +544,7 @@ body {
   border-radius: 8px;
   border: 1px solid #eaecf0;
   background: #fff;
-  box-shadow:
-    0px 12px 16px -4px rgba(16, 24, 40, 0.1),
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.1),
     0px 4px 20px -2px rgba(16, 24, 40, 0.2);
 }
 .e-dropdown-popup ul .e-item {
