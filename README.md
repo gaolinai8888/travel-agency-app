@@ -1,4 +1,8 @@
+
 # 📌 Travel Agency App 🗺️ 
+<p align="center">
+<img width="947" height="499" alt="image" src="https://github.com/user-attachments/assets/66ffed3c-ccd6-4b82-96a0-037fe131e8b0" />
+</p>
 
 A modern, responsive web application for exploring and booking travel experiences.  
 The app includes:
